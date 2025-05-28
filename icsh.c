@@ -8,7 +8,6 @@
  #include <stdlib.h>
  #include <unistd.h>
  #include <sys/wait.h>
- #include <signal.h>
  
  #define MAX_CMD_BUFFER 255
  #define MAX_ARGS 64
@@ -77,34 +76,10 @@
      }
  }
  
- void sigint_handler(int sig) {
-     printf("\nCaught SIGINT\n");
- }
- 
- void sigtstp_handler(int sig) {
-     printf("\nCaught SIGTSTP\n");
- }
- 
- void setup_signal_handlers() {
-     struct sigaction sa_int, sa_tstp;
- 
-     sa_int.sa_handler = sigint_handler;
-     sigemptyset(&sa_int.sa_mask);
-     sa_int.sa_flags = 0;
-     sigaction(SIGINT, &sa_int, NULL);
- 
-     sa_tstp.sa_handler = sigtstp_handler;
-     sigemptyset(&sa_tstp.sa_mask);
-     sa_tstp.sa_flags = 0;
-     sigaction(SIGTSTP, &sa_tstp, NULL);
- }
- 
  int main(int argc, char *argv[]) {
      FILE *input_stream = stdin;
      char buffer[MAX_CMD_BUFFER];
      char last_command[MAX_CMD_BUFFER] = "";
- 
-     setup_signal_handlers();
  
      if (argc == 2) {
          input_stream = fopen(argv[1], "r");
