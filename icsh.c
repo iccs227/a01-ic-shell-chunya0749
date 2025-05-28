@@ -58,25 +58,14 @@
      }
  }
  
- int main(int argc, char *argv[]) {
-     FILE *input_stream = stdin;
+ int main() {
      char buffer[MAX_CMD_BUFFER];
      char last_command[MAX_CMD_BUFFER] = "";
  
-     if (argc == 2) {
-         input_stream = fopen(argv[1], "r");
-         if (input_stream == NULL) {
-             perror("Error opening script file");
-             return 1;
-         }
-     }
- 
      while (1) {
-         if (input_stream == stdin) {
-             printf("icsh $ ");
-         }
+         printf("icsh $ ");
  
-         if (fgets(buffer, MAX_CMD_BUFFER, input_stream) == NULL) {
+         if (fgets(buffer, MAX_CMD_BUFFER, stdin) == NULL) {
              break;
          }
  
@@ -106,4 +95,3 @@
  
      return 0;
  }
- 
