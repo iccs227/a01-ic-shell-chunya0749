@@ -9,7 +9,6 @@
  #include <unistd.h>
  #include <sys/wait.h>
  #include <signal.h>
- #include <fcntl.h>
  
  #define MAX_CMD_BUFFER 255
  #define MAX_ARGS 64
@@ -32,53 +31,6 @@
      return 1;
  }
  
- void redirect(char **args) {
-     int in = -1, out = -1;
-     char buffer[1024];
-     size_t got;
-     char *input_file = NULL, *output_file = NULL;
- 
-     for (int i = 0; args[i] != NULL; i++) {
-         if (strcmp(args[i], "<") == 0 && args[i + 1] != NULL) {
-             input_file = args[i + 1];
-             args[i] = NULL;
-             args[i + 1] = NULL;
-         } else if (strcmp(args[i], ">") == 0 && args[i + 1] != NULL) {
-             output_file = args[i + 1];
-             args[i] = NULL;
-             args[i + 1] = NULL;
-         }
-     }
- 
-     if (input_file) {
-         in = open(input_file, O_RDONLY);
-         if (in < 0) {
-             perror("Couldn't open input file");
-             exit(1);
-         }
-         dup2(in, STDIN_FILENO);
-         close(in);
-     }
- 
-     if (output_file) {
-         out = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-         if (out < 0) {
-             perror("Couldn't open output file");
-             exit(1);
-         }
-         dup2(out, STDOUT_FILENO);
-         close(out);
-     }
- 
-     if (args[0] == NULL && input_file && output_file) {
-         while ((got = fread(buffer, 1, 1024, stdin)) > 0) {
-             fwrite(buffer, 1, got, stdout);
-         }
-         fflush(stdout);
-         exit(0);
-     }
- }
- 
  void externalRunning(char **args) {
      int status;
      pid_t pid = fork();
@@ -87,7 +39,6 @@
          perror("Fork failed");
          exit(1);
      } else if (pid == 0) {
-         redirect(args);
          execvp(args[0], args);
          perror("exec failed");
          exit(1);
@@ -109,11 +60,7 @@
      if (args[0] == NULL) return;
  
      if (strcmp(args[0], "echo") == 0) {
-         int saved_stdout = dup(STDOUT_FILENO);
-         redirect(args);
          print_argument(args);
-         dup2(saved_stdout, STDOUT_FILENO);
-         close(saved_stdout);
      } else if (strcmp(args[0], "exit") == 0) {
          int code = 0;
          if (args[1] != NULL) {
@@ -130,10 +77,34 @@
      }
  }
  
+ void sigint_handler(int sig) {
+     printf("\nCaught SIGINT\n");
+ }
+ 
+ void sigtstp_handler(int sig) {
+     printf("\nCaught SIGTSTP\n");
+ }
+ 
+ void setup_signal_handlers() {
+     struct sigaction sa_int, sa_tstp;
+ 
+     sa_int.sa_handler = sigint_handler;
+     sigemptyset(&sa_int.sa_mask);
+     sa_int.sa_flags = 0;
+     sigaction(SIGINT, &sa_int, NULL);
+ 
+     sa_tstp.sa_handler = sigtstp_handler;
+     sigemptyset(&sa_tstp.sa_mask);
+     sa_tstp.sa_flags = 0;
+     sigaction(SIGTSTP, &sa_tstp, NULL);
+ }
+ 
  int main(int argc, char *argv[]) {
      FILE *input_stream = stdin;
      char buffer[MAX_CMD_BUFFER];
      char last_command[MAX_CMD_BUFFER] = "";
+ 
+     setup_signal_handlers();
  
      if (argc == 2) {
          input_stream = fopen(argv[1], "r");
