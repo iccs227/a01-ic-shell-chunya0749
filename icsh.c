@@ -6,8 +6,6 @@
  #include <stdio.h>
  #include <string.h>
  #include <stdlib.h>
- #include <unistd.h>
- #include <sys/wait.h>
  
  #define MAX_CMD_BUFFER 255
  #define MAX_ARGS 64
@@ -28,22 +26,6 @@
          s++;
      }
      return 1;
- }
- 
- void externalRunning(char **args) {
-     int status;
-     pid_t pid = fork();
- 
-     if (pid < 0) {
-         perror("Fork failed");
-         exit(1);
-     } else if (pid == 0) {
-         execvp(args[0], args);
-         perror("exec failed");
-         exit(1);
-     } else {
-         waitpid(pid, &status, 0);
-     }
  }
  
  void handle_command(char *buffer) {
@@ -72,7 +54,7 @@
          printf("bye\n");
          exit(code);
      } else {
-         externalRunning(args);
+         printf("bad command\n");
      }
  }
  
