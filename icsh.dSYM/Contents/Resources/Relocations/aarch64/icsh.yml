@@ -1,8 +1,12 @@
 ---
 triple:          'arm64-apple-darwin'
-binary-path:     '/Users/chunya/Documents/Project1/icsh'
+binary-path:     icsh
 relocations:
-  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _print_argument, symObjAddr: 0x0, symBinAddr: 0x100003D84, symSize: 0x70 }
-  - { offsetInCU: 0x41, offset: 0x41, size: 0x8, addend: 0x0, symName: _print_argument, symObjAddr: 0x0, symBinAddr: 0x100003D84, symSize: 0x70 }
-  - { offsetInCU: 0x65, offset: 0x65, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x70, symBinAddr: 0x100003DF4, symSize: 0x13C }
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _print_argument, symObjAddr: 0x0, symBinAddr: 0x10000346C, symSize: 0x80 }
+  - { offsetInCU: 0x42, offset: 0x42, size: 0x8, addend: 0x0, symName: _print_argument, symObjAddr: 0x0, symBinAddr: 0x10000346C, symSize: 0x80 }
+  - { offsetInCU: 0x74, offset: 0x74, size: 0x8, addend: 0x0, symName: _is_number, symObjAddr: 0x80, symBinAddr: 0x1000034EC, symSize: 0xA4 }
+  - { offsetInCU: 0x9C, offset: 0x9C, size: 0x8, addend: 0x0, symName: _redirect, symObjAddr: 0x124, symBinAddr: 0x100003590, symSize: 0x328 }
+  - { offsetInCU: 0x130, offset: 0x130, size: 0x8, addend: 0x0, symName: _externalRunning, symObjAddr: 0x44C, symBinAddr: 0x1000038B8, symSize: 0xA4 }
+  - { offsetInCU: 0x170, offset: 0x170, size: 0x8, addend: 0x0, symName: _handle_command, symObjAddr: 0x4F0, symBinAddr: 0x10000395C, symSize: 0x204 }
+  - { offsetInCU: 0x1E8, offset: 0x1E8, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x6F4, symBinAddr: 0x100003B60, symSize: 0x270 }
 ...

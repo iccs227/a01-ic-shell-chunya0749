@@ -1,13 +1,17 @@
-CC=gcc
-CFLAGS=-Wall -g 
-BINARY=icsh
+CC = gcc
+CFLAGS = -Wall -g
+BINARY = icsh
+OBJS = icsh.o job.o signal.o
 
-all: icsh
+all: $(BINARY)
 
-icsh: icsh.c
-	$(CC) -o $(BINARY) $(CFLAGS) $<
+$(BINARY): $(OBJS)
+	$(CC) $(CFLAGS) -o $(BINARY) $(OBJS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
 
 clean:
-	rm -f $(BINARY)
+	rm -f $(BINARY) *.o
