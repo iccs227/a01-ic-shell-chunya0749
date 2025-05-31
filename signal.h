@@ -1,10 +1,13 @@
-// ==== signal.h ====
-#ifndef SIGNAL_HANDLER_H
-#define SIGNAL_HANDLER_H
+#ifndef SIGNAL_H
+#define SIGNAL_H
 
-void signalHandlerSetUP();
+#include <signal.h>
+
+extern pid_t main_pid;
+
 void sigint_handler(int sig);
 void sigtstp_handler(int sig);
 void sigchld_handler(int sig);
+void signalHandlerSetUP();
 
 #endif
