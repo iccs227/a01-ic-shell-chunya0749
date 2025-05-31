@@ -80,7 +80,6 @@ void updateJobList() {
     
     for (int i = 1; i <= jobID; i++) {
         if (strcmp(jobList[i].Process_status, "Running") == 0) {
-            // MUST USE WNOHANG in signal handler context
             pid_result = waitpid(jobList[i].pid, &status, WNOHANG);
             
             if (pid_result > 0) {
@@ -103,10 +102,8 @@ void externalRunning(char **args, int background) {
     if (pid < 0) {
         perror("Fork failed");
         exit(1);
-    } else if (pid == 0) { // Child Process
-        setpgid(0, 0);  // Create new process group
-        
-        // Reset signals to default behavior
+    } else if (pid == 0) {
+        setpgid(0, 0);  
         signal(SIGINT, SIG_DFL);
         signal(SIGTSTP, SIG_DFL);
         signal(SIGQUIT, SIG_DFL);
